@@ -11,16 +11,30 @@ This project was a fun exercise in applying computer vision techniques to a uniq
 
 ## Dataset
 
-The dataset used for training consisted of 38 images:
+The dataset used for training consisted of 49 images:
 - **27 images** for training
 - **7 images** for validation
 - **4 images** for testing
 
-The dataset was gathered from multiple operating systems, and while it was small, it provided a good starting point for the model. There are certainly opportunities to improve the dataset by adding more data, removing noisy data, and applying augmentations to create a more robust model.
+Key dataset statistics:
+- **Number of Annotations**: 103 annotations across the dataset
+- **Average Annotations per Image**: 2.1
+- **Median Image Ratio**: 1000x698 (wide)
+
+The dataset was gathered from multiple operating systems, and while it was small, it provided a good starting point for the model. The data includes icons scattered across different parts of the screen, in various sizes, as illustrated by the heatmap below:
+
+![Heatmap of Icon Locations](dataset/icon_heatmap.png)
+
+Annotations were spread across three classes:
+- **Google Chrome**: 39 annotations
+- **Discord**: 32 annotations
+- **Spotify**: 32 annotations
+
+There is a `icon-detection.v3i.coco.zip` file in the `dataset` folder, containing the training data and corresponding annotations.
 
 ## Model Training
 
-The labeling and training of the model were performed using **Roboflow**, a powerful tool for managing datasets and training computer vision models. Roboflow's intuitive interface made it easy to annotate the images and deploy a model quickly.
+The labeling and training of the model were performed using **Roboflow 3.0 Object Detection** as the base model.
 
 ## Model Performance
 
@@ -46,7 +60,3 @@ While this project was a successful proof of concept, there is room for improvem
 ## Conclusion
 
 ScreenFlow was a fun project that showcases the potential of computer vision in desktop environments. By detecting and localizing desktop icons, this POC lays the groundwork for more advanced applications, such as AI-driven desktop navigation and automation.
-
-## Acknowledgments
-
-This project was developed using **Roboflow 3.0 Object Detection** as the base model for labeling, dataset management, and model training.
