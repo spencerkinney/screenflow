@@ -50,11 +50,21 @@ These results demonstrate the model's potential, although it’s important to no
 
 ## Example Output
 
+### Desktop Screenshot Example
+
 Below is an example screenshot of the model's output, showing the detected bounding boxes around the desktop icons:
 
 ![Screenshot Example](screenshot_example.png)
 
 While this example demonstrates the model’s ability to detect desktop icons, it is far from perfect. The model will often miss some icons, and it particularly struggles with detecting Discord icons.
+
+### Real-World iPhone Example
+
+In this real-world test, the model was run using an iPhone to capture a live screenshot. Despite being trained only on desktop screenshots, the model performed decently well, as shown in the GIF below:
+
+![iPhone Example](screenshot_iphone.gif)
+
+The model had some trouble with the Discord icon, occasionally confusing it with similar icons, and was also impacted by screen glare. However, the results are promising given the limitations of the training data.
 
 ## Usage
 
