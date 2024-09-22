@@ -2,7 +2,7 @@
 
 ![ScreenFlow Logo](screenflow.png)
 
-ScreenFlow is a simple React application built with Chakra UI that allows you to upload an image and receive the bounding box coordinates of desktop icons on the computer. This project serves as a proof of concept (POC) for a computer vision model that detects desktop icons, potentially enabling an AI or robot to visually navigate and operate a desktop computer.
+ScreenFlow is a simple React application built with Chakra UI that allows you to upload an image and receive the bounding box coordinates of desktop icons on the computer. The goal of this project is to explore the potential of AI in automating and navigating desktop environments, enabling a robot or AI to visually interact with a computer as humans do.
 
 ## Project Overview
 
@@ -65,6 +65,12 @@ In this real-world test, the model was run using an iPhone to capture a live scr
 ![iPhone Example](screenshot_iphone.gif)
 
 The model had some trouble with the Discord icon, occasionally confusing it with similar icons, and was also impacted by screen glare. However, the results are promising given the limitations of the training data.
+
+### Web App Example (Windows)
+
+The following GIF was taken from the web app located in the `ui` folder, demonstrating the model detecting icons on a Windows desktop:
+
+![Windows Example](screenshot_windows.gif)
 
 ## Usage
 
