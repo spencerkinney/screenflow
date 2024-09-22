@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { ChakraProvider, Box } from '@chakra-ui/react';
-import { BrowserRouter as Router } from 'react-router-dom';
 import theme from './theme';
 import MainPage from './components/MainPage';
-import ResultsPage from './components/ResultsPage';
-import LoadingScreen from './components/LoadingScreen';
+import FullScreenResultsView from './components/FullScreenResultsView';
+import LoadingOverlay from './components/LoadingOverlay';
 
 const App = () => {
-  const [currentStep, setCurrentStep] = useState('main');
+  const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState(null);
 
   const handleImageUpload = (file) => {
-    setCurrentStep('loading');
+    setIsLoading(true);
     // Simulate API call
     setTimeout(() => {
       setResults({ 
@@ -21,25 +20,27 @@ const App = () => {
           { x: 50, y: 40, width: 20, height: 15, label: 'Spotify' },
         ]
       });
-      setCurrentStep('results');
+      setIsLoading(false);
     }, 3000);
   };
 
   const resetApp = () => {
     setResults(null);
-    setCurrentStep('main');
   };
 
   return (
-    <Router>
-      <ChakraProvider theme={theme}>
-        <Box minH="100vh" bg="gray.50" display="flex" alignItems="center" justifyContent="center">
-          {currentStep === 'main' && <MainPage onUpload={handleImageUpload} />}
-          {currentStep === 'loading' && <LoadingScreen />}
-          {currentStep === 'results' && results && <ResultsPage results={results} onReset={resetApp} />}
-        </Box>
-      </ChakraProvider>
-    </Router>
+    <ChakraProvider theme={theme}>
+      <Box minH="100vh" bg="gray.50" display="flex" alignItems="center" justifyContent="center">
+        <MainPage onUpload={handleImageUpload} />
+        {isLoading && <LoadingOverlay />}
+        {results && (
+          <FullScreenResultsView
+            results={results}
+            onClose={resetApp}
+          />
+        )}
+      </Box>
+    </ChakraProvider>
   );
 };
 
