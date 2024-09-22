@@ -86,3 +86,7 @@ While this project was a successful proof of concept, there is room for improvem
 ## Conclusion
 
 ScreenFlow was a fun project that showcases the potential of computer vision in desktop environments. By detecting and localizing desktop icons, this POC lays the groundwork for more advanced applications, such as AI-driven desktop navigation and automation.
+
+## Live Demo
+
+You can try a live demo of the web app [here](https://gentle-sierra-41131-29fa44bce9f8.herokuapp.com/).
