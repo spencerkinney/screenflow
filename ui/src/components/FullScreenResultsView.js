@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Image, keyframes } from '@chakra-ui/react';
+import { Box, Image, Text, keyframes } from '@chakra-ui/react';
 
 const fadeIn = keyframes`
   from { opacity: 0; }
@@ -72,6 +72,15 @@ const FullScreenResultsView = ({ results, onClose }) => {
     };
   }, [onClose]);
 
+  const getColorForClass = (className) => {
+    switch (className.toLowerCase()) {
+      case 'chrome': return 'blue.500';
+      case 'spotify': return 'green.500';
+      case 'discord': return 'purple.500';
+      default: return 'yellow.500';
+    }
+  };
+
   return (
     <Box
       position="fixed"
@@ -99,16 +108,16 @@ const FullScreenResultsView = ({ results, onClose }) => {
           w="100%"
           h="100%"
         />
-        {results.boundingBoxes.map((box, index) => (
+        {results.predictions.map((prediction, index) => (
           <Box
             key={index}
             position="absolute"
-            left={`${box.x}%`}
-            top={`${box.y}%`}
-            width={`${box.width}%`}
-            height={`${box.height}%`}
+            left={`${(prediction.x - prediction.width / 2) / imageRef.current?.naturalWidth * 100}%`}
+            top={`${(prediction.y - prediction.height / 2) / imageRef.current?.naturalHeight * 100}%`}
+            width={`${prediction.width / imageRef.current?.naturalWidth * 100}%`}
+            height={`${prediction.height / imageRef.current?.naturalHeight * 100}%`}
             border="2px solid"
-            borderColor="green.500"
+            borderColor={getColorForClass(prediction.class)}
             borderRadius="sm"
             pointerEvents="none"
           >
@@ -116,7 +125,7 @@ const FullScreenResultsView = ({ results, onClose }) => {
               position="absolute"
               top="-1.5em"
               left={0}
-              bg="green.500"
+              bg={getColorForClass(prediction.class)}
               color="white"
               fontSize="sm"
               fontWeight="bold"
@@ -125,7 +134,7 @@ const FullScreenResultsView = ({ results, onClose }) => {
               borderRadius="sm"
               whiteSpace="nowrap"
             >
-              {box.label}
+              {`${prediction.class} (${(prediction.confidence * 100).toFixed(1)}%)`}
             </Box>
           </Box>
         ))}

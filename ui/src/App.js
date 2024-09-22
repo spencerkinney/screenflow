@@ -1,27 +1,35 @@
 import React, { useState } from 'react';
-import { ChakraProvider, Box } from '@chakra-ui/react';
+import { ChakraProvider, Box, useToast } from '@chakra-ui/react';
 import theme from './theme';
 import MainPage from './components/MainPage';
 import FullScreenResultsView from './components/FullScreenResultsView';
 import LoadingOverlay from './components/LoadingOverlay';
+import { detectIcons } from './services/roboflowService';
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState(null);
+  const toast = useToast();
 
-  const handleImageUpload = (file) => {
+  const handleImageUpload = async (file) => {
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setResults({ 
+    try {
+      const detectionResults = await detectIcons(file);
+      setResults({
         imageSrc: URL.createObjectURL(file),
-        boundingBoxes: [
-          { x: 10, y: 20, width: 15, height: 10, label: 'Chrome' },
-          { x: 50, y: 40, width: 20, height: 15, label: 'Spotify' },
-        ]
+        predictions: detectionResults.predictions
       });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to analyze the image. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
       setIsLoading(false);
-    }, 3000);
+    }
   };
 
   const resetApp = () => {
