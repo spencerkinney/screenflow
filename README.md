@@ -48,6 +48,13 @@ The model was evaluated on the test set, achieving the following benchmarks:
 
 These results demonstrate the model's potential, although it’s important to note that these high results may be influenced by the small size of the test set. Further testing on larger and more diverse datasets would be needed to fully assess the model’s robustness.
 
+## Example Output
+
+Below is an example screenshot of the model's output, showing the detected bounding boxes around the desktop icons:
+
+![Screenshot Example](screenshot_example.png)
+
+While this example demonstrates the model’s ability to detect desktop icons, it is far from perfect. The model will often miss some icons, and it particularly struggles with detecting Discord icons.
 
 ## Usage
 
