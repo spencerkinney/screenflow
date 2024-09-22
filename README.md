@@ -46,7 +46,8 @@ The model was evaluated on the test set, achieving the following benchmarks:
 - ![Precision](https://via.placeholder.com/15/38bdf8/38bdf8.png) **Precision**: 93.0%
 - ![Recall](https://via.placeholder.com/15/f59e0b/f59e0b.png) **Recall**: 93.1%
 
-These results demonstrate the model's potential, although further optimizations and dataset improvements could enhance its performance.
+These results demonstrate the model's potential, although it’s important to note that these high results may be influenced by the small size of the test set. Further testing on larger and more diverse datasets would be needed to fully assess the model’s robustness.
+
 
 ## Usage
 
