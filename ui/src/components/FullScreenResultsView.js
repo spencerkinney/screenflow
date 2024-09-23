@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Image, Text, keyframes } from '@chakra-ui/react';
+import { Box, Image, keyframes } from '@chakra-ui/react';
 
 const fadeIn = keyframes`
   from { opacity: 0; }
@@ -26,36 +26,35 @@ const EscKeyIndicator = () => (
 );
 
 const FullScreenResultsView = ({ results, onClose }) => {
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const imageRef = useRef(null);
+  const [scale, setScale] = useState(1);
   const containerRef = useRef(null);
+  const imageRef = useRef(null);
 
   useEffect(() => {
-    const updateDimensions = () => {
-      if (imageRef.current && containerRef.current) {
-        const img = imageRef.current;
-        const container = containerRef.current;
-        const containerAspectRatio = container.clientWidth / container.clientHeight;
-        const imageAspectRatio = img.naturalWidth / img.naturalHeight;
+    const handleResize = () => {
+      if (containerRef.current && imageRef.current) {
+        const containerAspect = containerRef.current.clientWidth / containerRef.current.clientHeight;
+        const imageAspect = imageRef.current.naturalWidth / imageRef.current.naturalHeight;
 
-        let newWidth, newHeight;
-
-        if (containerAspectRatio > imageAspectRatio) {
-          newHeight = container.clientHeight;
-          newWidth = newHeight * imageAspectRatio;
+        let newScale;
+        if (containerAspect > imageAspect) {
+          newScale = containerRef.current.clientHeight / imageRef.current.naturalHeight;
         } else {
-          newWidth = container.clientWidth;
-          newHeight = newWidth / imageAspectRatio;
+          newScale = containerRef.current.clientWidth / imageRef.current.naturalWidth;
         }
-
-        setDimensions({ width: newWidth, height: newHeight });
+        setScale(newScale);
       }
     };
 
-    window.addEventListener('resize', updateDimensions);
-    updateDimensions();
+    window.addEventListener('resize', handleResize);
+    // Initial calculation
+    if (imageRef.current && imageRef.current.complete) {
+      handleResize();
+    } else if (imageRef.current) {
+      imageRef.current.onload = handleResize;
+    }
 
-    return () => window.removeEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', handleResize);
   }, [results.imageSrc]);
 
   useEffect(() => {
@@ -66,10 +65,7 @@ const FullScreenResultsView = ({ results, onClose }) => {
     };
 
     document.addEventListener('keydown', handleEscapeKey);
-
-    return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
-    };
+    return () => document.removeEventListener('keydown', handleEscapeKey);
   }, [onClose]);
 
   const getColorForClass = (className) => {
@@ -96,26 +92,27 @@ const FullScreenResultsView = ({ results, onClose }) => {
       ref={containerRef}
     >
       <EscKeyIndicator />
-      <Box
-        position="relative"
-        width={`${dimensions.width}px`}
-        height={`${dimensions.height}px`}
-      >
+      <Box position="relative" height="100%" width="100%">
         <Image
           ref={imageRef}
           src={results.imageSrc}
           objectFit="contain"
-          w="100%"
-          h="100%"
+          maxH="100%"
+          maxW="100%"
+          position="absolute"
+          top="50%"
+          left="50%"
+          transform="translate(-50%, -50%)"
         />
         {results.predictions.map((prediction, index) => (
           <Box
             key={index}
             position="absolute"
-            left={`${(prediction.x - prediction.width / 2) / imageRef.current?.naturalWidth * 100}%`}
-            top={`${(prediction.y - prediction.height / 2) / imageRef.current?.naturalHeight * 100}%`}
-            width={`${prediction.width / imageRef.current?.naturalWidth * 100}%`}
-            height={`${prediction.height / imageRef.current?.naturalHeight * 100}%`}
+            left={`calc(50% + ${(prediction.x - imageRef.current?.naturalWidth / 2) * scale}px)`}
+            top={`calc(50% + ${(prediction.y - imageRef.current?.naturalHeight / 2) * scale}px)`}
+            width={`${prediction.width * scale}px`}
+            height={`${prediction.height * scale}px`}
+            transform="translate(-50%, -50%)"
             border="2px solid"
             borderColor={getColorForClass(prediction.class)}
             borderRadius="sm"
@@ -124,10 +121,11 @@ const FullScreenResultsView = ({ results, onClose }) => {
             <Box
               position="absolute"
               top="-1.5em"
-              left={0}
+              left="50%"
+              transform="translateX(-50%)"
               bg={getColorForClass(prediction.class)}
               color="white"
-              fontSize="sm"
+              fontSize={`${Math.max(12, 14 * scale)}px`}
               fontWeight="bold"
               px={2}
               py={1}
